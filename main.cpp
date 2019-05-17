@@ -8,72 +8,44 @@ struct Tree {
     Tree *left, *right;
 };
 
-void add_leaf(Tree *&root, int data);
+void add_leaf(Tree *&node, int data);
 
 void my_print(Tree *tree);
 
-int search(Tree *root, int k, int &count);
-
-bool dfs(Tree *root);
+bool target_function(Tree *node);
 
 int main() {
-    int k = 5;
-    Tree *tree = new Tree;
-    tree->x = 9;
-    tree->left = nullptr;
-    tree->right = nullptr;
-    add_leaf(tree, 11);
-    for (int i = 1; i < 6; i++) {
-        add_leaf(tree, i);
-    }
-    add_leaf(tree, 41);
-    add_leaf(tree, 10);
-    cout << "\nmyprint(Tree)" << endl;
-    my_print(tree);
-    cout << endl;
-    int count = 0;
-    if (search(tree, k, count))
-        cout << "true" << endl;
-    else cout << "false" << endl;
-
+    Tree *root = nullptr;
     char str[] = "nastya";
-    tree = nullptr;
     for (int i = 0; i < strlen(str); i++) {
-        add_leaf(tree, (int) str[i]);
+        add_leaf(root, (int) str[i]);
     }
-    cout << "int  str" << endl;
-    my_print(tree);
+    cout << "\nmy_print(Tree)" << endl;
+    my_print(root);
     cout << endl;
-    cout << "dfs\n";
-    if (dfs(tree)) cout << "true ";
+    cout << "target_function\n";
+    if (target_function(root)) {
+        cout << "true";
+    } else {
+        cout << "false";
+    }
     cout << endl;
-    system("pause");
+//    system("pause");
 }
 
-bool dfs(Tree *root) {
-    if (root == nullptr) {
+bool target_function(Tree *node) {
+    if (node == nullptr) {
         return false;
     }
-    int k = root->x;
-    int count = 0;
-    if (search(root, k, count) >= 2) {
+
+    if (node->left != nullptr && node->left->x == node->x) {
         return true;
-    }
-    dfs(root->left);
-    dfs(root->right);
-}
-
-int search(Tree *root, int k, int &count) {
-    if (root == nullptr) {
-        return count;
-    }
-
-    if (root->x == k) count++;
-
-    if (k <= root->x) {
-        search(root->left, k, count);
     } else {
-        search(root->right, k, count);
+        if (target_function(node->left)) {
+            return true;
+        } else {
+            return target_function(node->right);
+        }
     }
 }
 
@@ -86,16 +58,18 @@ void my_print(Tree *tree) {
     my_print(tree->right);
 }
 
-void add_leaf(Tree *&root, int data) {
-    if (root == nullptr) {
+void add_leaf(Tree *&node, int data) {
+    if (node == nullptr) {
         Tree *temper = new Tree;
         temper->x = data;
         temper->left = nullptr;
         temper->right = nullptr;
-        root = temper;
+        node = temper;
     } else {
-        if (data <= root->x) {
-            add_leaf(root->left, data);
-        } else add_leaf(root->right, data);
+        if (data <= node->x) {
+            add_leaf(node->left, data);
+        } else {
+            add_leaf(node->right, data);
+        }
     }
 }
